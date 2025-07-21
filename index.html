@@ -7,10 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
@@ -34,7 +34,7 @@
             .print-container {
                 width: 100% !important;
                 max-width: 100% !important;
-                padding: 0 !important;
+                padding: 1cm !important; /* Add some margin for printing */
                 margin: 0 !important;
             }
             #invoice-preview-container {
@@ -48,105 +48,87 @@
         }
         /* Custom form styling */
         .form-label {
-            @apply block text-sm font-medium text-slate-700 mb-1;
+            @apply block text-sm font-medium text-gray-600 mb-1;
         }
         .form-input {
-            @apply block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition;
+            @apply block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out;
         }
         .section-title {
-            @apply text-lg font-semibold text-slate-800;
+            @apply text-xl font-semibold text-gray-800 border-b border-gray-200 pb-3 mb-6;
         }
         /* Paid Stamp Style */
         .paid-stamp {
             position: absolute;
-            top: 50%;
+            top: 45%;
             left: 50%;
-            transform: translate(-50%, -50%) rotate(-20deg);
-            font-size: 6rem;
-            font-weight: 700;
-            color: #28a745;
-            border: 8px double #28a745;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 5rem; /* Slightly smaller */
+            font-weight: 800; /* Bolder */
+            color: #16a34a; /* A nice green */
+            border: 10px double #16a34a;
             padding: 0.5rem 1.5rem;
             border-radius: 0.5rem;
-            opacity: 0.15;
+            opacity: 0.1; /* More subtle */
             pointer-events: none;
             display: none; /* Hidden by default */
+            z-index: 10;
         }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800">
+<body class="bg-gray-50 text-gray-800">
 
     <div class="container mx-auto p-4 sm:p-6 lg:p-8">
         <div class="flex flex-wrap -mx-4">
 
             <!-- Input Form Column -->
             <div class="w-full lg:w-5/12 px-4 mb-8 lg:mb-0 no-print">
-                <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl shadow-slate-200/50">
-                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Invoice Generator</h1>
-                    <p class="text-slate-500 mb-8">Untuk S2M PRODUCTION</p>
+                <div class="bg-white p-6 sm:p-8 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex items-center gap-4 mb-8">
+                        <img src="https://i.imgur.com/IJxCjEL.png" alt="Logo S2M PRODUCTION" class="h-12 w-12 rounded-full" onerror="this.style.display='none'">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">Invoice Generator</h1>
+                            <p class="text-gray-500">Untuk S2M PRODUCTION</p>
+                        </div>
+                    </div>
+                    
 
-                    <form id="invoice-form" class="space-y-8">
+                    <form id="invoice-form" class="space-y-6">
                         <!-- General Info -->
-                        <div class="space-y-4">
+                        <div>
                              <h3 class="section-title">Info Umum</h3>
                              <div>
-                                <label for="invoiceNumberManual" class="form-label">Nomor Invoice (Manual)</label>
-                                <div class="relative">
-                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" /></svg>
-                                    </div>
-                                    <input type="text" id="invoiceNumberManual" placeholder="Otomatis jika kosong" class="form-input pl-10">
-                                </div>
+                                <label for="invoiceNumberManual" class="form-label">Nomor Invoice (Opsional)</label>
+                                <input type="text" id="invoiceNumberManual" placeholder="Otomatis jika kosong" class="form-input">
                             </div>
                         </div>
 
                         <!-- Client Information -->
-                        <div class="space-y-4 border-t border-slate-200 pt-6">
+                        <div class="border-t border-gray-200 pt-6">
                             <h3 class="section-title">Informasi Klien</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                                 <div>
                                     <label for="clientName" class="form-label">Nama Klien</label>
-                                    <div class="relative">
-                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
-                                        </div>
-                                        <input type="text" id="clientName" placeholder="Budi & Wati" class="form-input pl-10">
-                                    </div>
+                                    <input type="text" id="clientName" placeholder="Budi & Wati" class="form-input">
                                 </div>
                                 <div>
                                     <label for="clientPhone" class="form-label">Nomor Telepon</label>
-                                    <div class="relative">
-                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.518.759a11.03 11.03 0 004.28 4.28l.759-1.518a1 1 0 011.06-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
-                                        </div>
-                                        <input type="tel" id="clientPhone" placeholder="081234567890" class="form-input pl-10">
-                                    </div>
+                                    <input type="tel" id="clientPhone" placeholder="081234567890" class="form-input">
                                 </div>
                             </div>
                         </div>
 
                         <!-- Event Details -->
-                        <div class="space-y-4 border-t border-slate-200 pt-6">
+                        <div class="border-t border-gray-200 pt-6">
                             <h3 class="section-title">Detail Acara</h3>
                             <div class="space-y-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                                     <div>
                                         <label for="eventName" class="form-label">Nama Acara</label>
-                                         <div class="relative">
-                                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5a.997.997 0 01.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
-                                            </div>
-                                            <input type="text" id="eventName" placeholder="Wedding Budi & Wati" class="form-input pl-10">
-                                        </div>
+                                        <input type="text" id="eventName" placeholder="Wedding Budi & Wati" class="form-input">
                                     </div>
                                     <div>
                                         <label for="eventDate" class="form-label">Tanggal Acara</label>
-                                        <div class="relative">
-                                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
-                                            </div>
-                                            <input type="date" id="eventDate" class="form-input pl-10">
-                                        </div>
+                                        <input type="date" id="eventDate" class="form-input">
                                     </div>
                                 </div>
                                 <div>
@@ -157,7 +139,7 @@
                         </div>
                         
                         <!-- Order Details -->
-                        <div class="space-y-4 border-t border-slate-200 pt-6">
+                        <div class="border-t border-gray-200 pt-6">
                             <h3 class="section-title">Detail Pesanan & Pembayaran</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                                 <div>
@@ -171,24 +153,15 @@
                                 </div>
                                 <div>
                                     <label for="packagePrice" class="form-label">Harga Paket</label>
-                                    <div class="relative">
-                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><span class="text-slate-500 text-sm">Rp</span></div>
-                                        <input type="number" id="packagePrice" placeholder="1500000" class="form-input pl-9">
-                                    </div>
+                                    <input type="number" id="packagePrice" placeholder="1500000" class="form-input">
                                 </div>
                                 <div>
                                     <label for="discount" class="form-label">Diskon (%)</label>
-                                     <div class="relative">
-                                        <input type="number" id="discount" placeholder="0" class="form-input pr-8 text-right">
-                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"><span class="text-slate-500 text-sm">%</span></div>
-                                    </div>
+                                    <input type="number" id="discount" placeholder="0" class="form-input">
                                 </div>
                                 <div>
                                     <label for="shippingCost" class="form-label">Ongkos Kirim</label>
-                                     <div class="relative">
-                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><span class="text-slate-500 text-sm">Rp</span></div>
-                                        <input type="number" id="shippingCost" placeholder="0" class="form-input pl-9">
-                                    </div>
+                                    <input type="number" id="shippingCost" placeholder="0" class="form-input">
                                 </div>
                                 <div>
                                     <label for="paymentStatus" class="form-label">Status Pembayaran</label>
@@ -199,20 +172,17 @@
                                 </div>
                                 <div>
                                     <label for="downPayment" class="form-label">Uang Muka / DP</label>
-                                     <div class="relative">
-                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><span class="text-slate-500 text-sm">Rp</span></div>
-                                        <input type="number" id="downPayment" placeholder="500000" class="form-input pl-9">
-                                    </div>
+                                    <input type="number" id="downPayment" placeholder="500000" class="form-input">
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Action Buttons -->
-                        <div class="pt-4 flex items-center space-x-4">
-                             <button type="button" id="print-button" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 shadow-lg shadow-indigo-500/30">
+                        <div class="pt-6 flex items-center space-x-4 border-t border-gray-200">
+                             <button type="button" id="print-button" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 shadow-sm hover:shadow-md">
                                 Cetak / Simpan PDF
                             </button>
-                            <button type="reset" class="w-full bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 transition-all duration-300">
+                            <button type="reset" class="w-full bg-gray-200 text-gray-700 font-bold py-3 px-4 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-all duration-300">
                                 Reset
                             </button>
                         </div>
@@ -222,103 +192,104 @@
 
             <!-- Invoice Preview Column -->
             <div class="w-full lg:w-7/12 px-4 print-container">
-                <div id="invoice-preview-container" class="relative bg-white p-8 sm:p-10 lg:p-12 rounded-2xl shadow-xl shadow-slate-200/50">
+                <div id="invoice-preview-container" class="relative bg-white p-8 sm:p-10 lg:p-12 rounded-xl border border-gray-200 shadow-sm">
                     <!-- Paid Stamp -->
                     <div id="paid-stamp" class="paid-stamp">LUNAS</div>
                     
                     <div id="invoice-preview">
                         <!-- Invoice Header -->
-                        <header class="flex justify-between items-start pb-8 border-b border-slate-200">
+                        <header class="flex justify-between items-start pb-8 mb-8 border-b-2 border-gray-800">
                             <div>
-                                <img src="https://i.imgur.com/IJxCjEL.png" alt="Logo S2M PRODUCTION" class="w-24 mb-4" onerror="this.style.display='none'">
-                                <h2 class="text-2xl font-bold text-slate-900">S2M PRODUCTION</h2>
-                                <p class="text-sm text-slate-500">Sewa Videobooth 360</p>
-                                <p class="text-sm text-slate-500">official.s2mproduction@gmail.com | 0812-1111-4522</p>
+                                <img src="https://i.imgur.com/IJxCjEL.png" alt="Logo S2M PRODUCTION" class="w-28 mb-4" onerror="this.style.display='none'">
+                                <h2 class="text-xl font-bold text-gray-800">S2M PRODUCTION</h2>
+                                <p class="text-sm text-gray-500">Sewa Videobooth 360</p>
+                                <p class="text-sm text-gray-500">official.s2mproduction@gmail.com | 0812-1111-4522</p>
                             </div>
                             <div class="text-right">
-                                <h1 class="text-4xl font-bold text-slate-900 uppercase tracking-widest">Invoice</h1>
-                                <p class="text-sm text-slate-500 mt-1">No: <span id="invoice-number-preview">INV-12345</span></p>
+                                <h1 class="text-4xl font-extrabold text-gray-800 uppercase">Invoice</h1>
+                                <p class="text-sm text-gray-500 mt-1">#<span id="invoice-number-preview">INV-12345</span></p>
                             </div>
                         </header>
 
                         <!-- Client & Date Info -->
-                        <section class="grid grid-cols-2 gap-4 my-8">
+                        <section class="grid grid-cols-2 gap-8 my-10">
                             <div>
-                                <h4 class="text-sm font-semibold text-slate-500 mb-1">Ditagihkan Kepada:</h4>
-                                <p id="client-name-preview" class="text-lg font-semibold text-slate-800">Nama Klien</p>
-                                <p id="client-phone-preview" class="text-sm text-slate-500">Nomor Telepon</p>
+                                <h4 class="text-sm font-semibold text-gray-500 mb-2 uppercase tracking-wider">Ditagihkan Kepada</h4>
+                                <p id="client-name-preview" class="text-lg font-bold text-gray-800">Nama Klien</p>
+                                <p id="client-phone-preview" class="text-sm text-gray-500">Nomor Telepon</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-sm text-slate-500"><strong>Tanggal Invoice:</strong> <span id="invoice-date-preview">-</span></p>
-                                <p class="text-sm text-slate-500"><strong>Tanggal Acara:</strong> <span id="event-date-preview">-</span></p>
+                                <h4 class="text-sm font-semibold text-gray-500 mb-2 uppercase tracking-wider">Detail</h4>
+                                <p class="text-sm text-gray-600"><strong>Tanggal Invoice:</strong> <span id="invoice-date-preview">-</span></p>
+                                <p class="text-sm text-gray-600"><strong>Tanggal Acara:</strong> <span id="event-date-preview">-</span></p>
                             </div>
                         </section>
                         
                         <!-- Event Details -->
-                        <section class="mb-10">
-                             <h4 class="text-sm font-semibold text-slate-500 mb-1">Detail Acara:</h4>
-                             <p class="font-semibold text-slate-800" id="event-name-preview">Nama Acara</p>
-                             <p class="text-sm text-slate-500" id="event-address-preview">Alamat Acara</p>
+                        <section class="mb-10 bg-gray-50 p-4 rounded-lg">
+                             <h4 class="text-sm font-semibold text-gray-500 mb-2 uppercase tracking-wider">Detail Acara</h4>
+                             <p class="font-semibold text-gray-800" id="event-name-preview">Nama Acara</p>
+                             <p class="text-sm text-gray-500" id="event-address-preview">Alamat Acara</p>
                         </section>
 
                         <!-- Items Table -->
                         <section>
                             <table class="w-full text-left">
-                                <thead class="bg-slate-50">
+                                <thead class="bg-gray-800 text-white">
                                     <tr>
-                                        <th class="text-left font-semibold text-slate-600 p-3 rounded-l-lg">Deskripsi</th>
-                                        <th class="text-right font-semibold text-slate-600 p-3 rounded-r-lg">Harga</th>
+                                        <th class="text-left font-semibold p-3 rounded-l-lg">Deskripsi</th>
+                                        <th class="text-right font-semibold p-3 rounded-r-lg">Harga</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="border-b border-slate-100">
-                                        <td class="p-3 align-top">
-                                            <p class="font-semibold text-slate-800">Sewa Videobooth 360</p>
-                                            <p class="text-sm text-slate-500" id="package-preview">Nama Paket</p>
+                                    <tr class="border-b border-gray-200">
+                                        <td class="p-4 align-top">
+                                            <p class="font-semibold text-gray-800">Sewa Videobooth 360</p>
+                                            <p class="text-sm text-gray-500" id="package-preview">Nama Paket</p>
                                         </td>
-                                        <td class="text-right p-3 align-top font-medium" id="package-price-preview">Rp 0</td>
+                                        <td class="text-right p-4 align-top font-medium text-gray-700" id="package-price-preview">Rp 0</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </section>
 
                         <!-- Totals Section -->
-                        <section class="flex justify-end mt-8">
-                            <div class="w-full max-w-sm text-sm">
-                                <div class="space-y-2">
+                        <section class="flex justify-end mt-10">
+                            <div class="w-full max-w-xs text-sm">
+                                <div class="space-y-3">
                                     <div class="flex justify-between">
-                                        <span class="text-slate-500">Subtotal</span>
-                                        <span class="font-medium text-slate-700" id="subtotal-preview">Rp 0</span>
+                                        <span class="text-gray-500">Subtotal</span>
+                                        <span class="font-medium text-gray-800" id="subtotal-preview">Rp 0</span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span class="text-slate-500" id="discount-label-preview">Diskon</span>
+                                        <span class="text-gray-500" id="discount-label-preview">Diskon</span>
                                         <span class="font-medium text-red-500" id="discount-amount-preview">- Rp 0</span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span class="text-slate-500">Ongkos Kirim</span>
-                                        <span class="font-medium text-slate-700" id="shipping-preview">Rp 0</span>
+                                        <span class="text-gray-500">Ongkos Kirim</span>
+                                        <span class="font-medium text-gray-800" id="shipping-preview">Rp 0</span>
                                     </div>
-                                    <div class="flex justify-between pt-2 border-t border-slate-200">
-                                        <span class="font-semibold text-slate-800">Total</span>
-                                        <span class="font-semibold text-slate-800" id="total-preview">Rp 0</span>
+                                    <div class="flex justify-between pt-3 border-t-2 border-gray-200">
+                                        <span class="font-bold text-gray-800">Total</span>
+                                        <span class="font-bold text-gray-800" id="total-preview">Rp 0</span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span class="text-slate-500">Uang Muka (DP)</span>
-                                        <span class="font-medium text-slate-700" id="dp-preview">Rp 0</span>
+                                        <span class="text-gray-500">Uang Muka (DP)</span>
+                                        <span class="font-medium text-gray-800" id="dp-preview">Rp 0</span>
                                     </div>
-                                    <div id="balance-due-container" class="flex justify-between p-3 bg-indigo-50 rounded-lg mt-2">
-                                        <span class="font-bold text-base text-indigo-800">Sisa Pembayaran</span>
-                                        <span class="font-bold text-base text-indigo-800" id="balance-preview">Rp 0</span>
+                                    <div id="balance-due-container" class="flex justify-between p-3 bg-blue-100 text-blue-900 rounded-lg mt-2">
+                                        <span class="font-bold text-base">Sisa Pembayaran</span>
+                                        <span class="font-bold text-base" id="balance-preview">Rp 0</span>
                                     </div>
                                 </div>
                             </div>
                         </section>
 
                         <!-- Footer Notes -->
-                        <footer class="border-t border-slate-200 mt-12 pt-8 text-sm text-slate-500">
-                            <h4 class="font-semibold text-slate-600 mb-2 uppercase">Pembayaran</h4>
+                        <footer class="border-t border-gray-200 mt-12 pt-8 text-sm text-gray-500 text-center">
+                            <h4 class="font-semibold text-gray-600 mb-2 uppercase tracking-wider">Detail Pembayaran</h4>
                             <p><strong>Bank Mandiri:</strong> 1120018375498 a/n SANTRI SYARIFATUL MA</p>
-                            <p class="mt-4"><strong>Catatan:</strong> Pelunasan pembayaran dilakukan paling lambat H-1 sebelum acara. Terima kasih atas kepercayaan Anda!</p>
+                            <p class="mt-4">Pelunasan dilakukan paling lambat H-1 sebelum acara. <br> Terima kasih atas kepercayaan Anda!</p>
                         </footer>
                     </div>
                 </div>
@@ -414,14 +385,14 @@
                 const paymentStatus = paymentStatusSelect.value;
                 if (paymentStatus === 'Lunas') {
                     downPayment = total; // If paid, DP equals total
-                    downPaymentInput.value = total; // Update the input field
+                    downPaymentInput.value = total.toFixed(0); // Update the input field without decimals
                     paidStamp.style.display = 'block';
-                    balanceContainer.classList.remove('bg-indigo-50', 'text-indigo-800');
+                    balanceContainer.classList.remove('bg-blue-100', 'text-blue-900');
                     balanceContainer.classList.add('bg-green-100', 'text-green-800');
                 } else {
                     paidStamp.style.display = 'none';
                     balanceContainer.classList.remove('bg-green-100', 'text-green-800');
-                    balanceContainer.classList.add('bg-indigo-50', 'text-indigo-800');
+                    balanceContainer.classList.add('bg-blue-100', 'text-blue-900');
                 }
                 
                 const balance = total - downPayment;
@@ -464,7 +435,7 @@
 
             // Function to initialize the invoice on page load
             function initializeInvoice() {
-                autoInvoiceNumber = `INV-${Date.now().toString().slice(-6)}`;
+                autoInvoiceNumber = `S2M-${Date.now().toString().slice(-6)}`;
                 manualInvoiceInput.value = '';
                 
                 const today = new Date();
