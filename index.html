@@ -15,33 +15,6 @@
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
-        /* A4 Page Sizing for Print */
-        @page {
-            size: A4;
-            margin: 0;
-        }
-        /* Styles for printing */
-        @media print {
-            html, body {
-                width: 210mm;
-                height: 297mm;
-                background-color: white !important;
-                margin: 0;
-                padding: 0;
-            }
-            .no-print {
-                display: none !important;
-            }
-            #invoice-preview-container {
-                box-shadow: none !important;
-                border: none !important;
-                border-radius: 0 !important;
-                width: 100%;
-                height: 100%;
-                box-sizing: border-box;
-                padding: 15mm !important; /* Adjusted padding for better fit */
-            }
-        }
         /* Custom form styling */
         .form-label {
             @apply block text-sm font-medium text-gray-600 mb-1;
