@@ -61,16 +61,16 @@
         /* Paid Stamp Style */
         .paid-stamp {
             position: absolute;
-            top: 45%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(-15deg);
-            font-size: 5rem; /* Slightly smaller */
-            font-weight: 800; /* Bolder */
-            color: #16a34a; /* A nice green */
-            border: 10px double #16a34a;
+            font-size: 4rem; 
+            font-weight: 800;
+            color: #16a34a; 
+            border: 8px double #16a34a;
             padding: 0.5rem 1.5rem;
             border-radius: 0.5rem;
-            opacity: 0.1; /* More subtle */
+            opacity: 0.1;
             pointer-events: none;
             display: none; /* Hidden by default */
             z-index: 10;
@@ -206,14 +206,14 @@
                     <!-- Paid Stamp -->
                     <div id="paid-stamp" class="paid-stamp">LUNAS</div>
                     
-                    <div id="invoice-preview">
+                    <div id="invoice-preview" class="flex flex-col h-full">
                         <!-- Invoice Header -->
                         <header class="flex justify-between items-start pb-4 mb-4 border-b-2 border-gray-800">
                             <div>
-                                <img src="https://i.imgur.com/IJxCjEL.png" alt="Logo S2M PRODUCTION" class="w-24 mb-3" onerror="this.style.display='none'">
-                                <h2 class="text-lg font-bold text-gray-800">S2M PRODUCTION</h2>
+                                <img src="https://i.imgur.com/IJxCjEL.png" alt="Logo S2M PRODUCTION" class="w-24 mb-2" onerror="this.style.display='none'">
+                                <h2 class="text-base font-bold text-gray-800">S2M PRODUCTION</h2>
                                 <p class="text-xs text-gray-500">Sewa Videobooth 360</p>
-                                <div class="mt-2 space-y-1 text-xs text-gray-500">
+                                <div class="mt-1 space-y-0.5 text-xs text-gray-500">
                                     <div class="flex items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                                             <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
@@ -230,94 +230,95 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <h1 class="text-3xl font-extrabold text-gray-800 uppercase">Invoice</h1>
+                                <h1 class="text-2xl font-extrabold text-gray-800 uppercase">Invoice</h1>
                                 <p class="text-xs text-gray-500 mt-1">#<span id="invoice-number-preview">INV-12345</span></p>
                             </div>
                         </header>
 
-                        <!-- Client & Date Info -->
-                        <section class="grid grid-cols-2 gap-8 my-6">
-                            <div>
-                                <h4 class="text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Ditagihkan Kepada</h4>
-                                <p id="client-name-preview" class="text-base font-bold text-gray-800">Nama Klien</p>
-                                <p id="client-phone-preview" class="text-xs text-gray-500">Nomor Telepon</p>
-                            </div>
-                            <div class="text-right">
-                                <h4 class="text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Detail</h4>
-                                <p class="text-xs text-gray-600"><strong>Tanggal Invoice:</strong> <span id="invoice-date-preview">-</span></p>
-                                <p class="text-xs text-gray-600"><strong>Tanggal Acara:</strong> <span id="event-date-preview">-</span></p>
-                            </div>
-                        </section>
-                        
-                        <!-- Event Details -->
-                        <section class="mb-6 bg-gray-50 p-3 rounded-lg">
-                             <h4 class="text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Detail Acara</h4>
-                             <p class="font-semibold text-gray-800 text-sm" id="event-name-preview">Nama Acara</p>
-                             <p class="text-xs text-gray-500" id="event-address-preview">Alamat Acara</p>
-                        </section>
+                        <main class="flex-grow">
+                            <!-- Client & Date Info -->
+                            <section class="grid grid-cols-2 gap-8 my-4">
+                                <div>
+                                    <h4 class="text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Ditagihkan Kepada</h4>
+                                    <p id="client-name-preview" class="text-sm font-bold text-gray-800">Nama Klien</p>
+                                    <p id="client-phone-preview" class="text-xs text-gray-500">Nomor Telepon</p>
+                                </div>
+                                <div class="text-right">
+                                    <h4 class="text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Detail</h4>
+                                    <p class="text-xs text-gray-600"><strong>Tanggal Invoice:</strong> <span id="invoice-date-preview">-</span></p>
+                                    <p class="text-xs text-gray-600"><strong>Tanggal Acara:</strong> <span id="event-date-preview">-</span></p>
+                                </div>
+                            </section>
+                            
+                            <!-- Event Details -->
+                            <section class="mb-4 bg-gray-50 p-3 rounded-lg">
+                                 <h4 class="text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Detail Acara</h4>
+                                 <p class="font-semibold text-gray-800 text-sm" id="event-name-preview">Nama Acara</p>
+                                 <p class="text-xs text-gray-500" id="event-address-preview">Alamat Acara</p>
+                            </section>
 
-                        <!-- Items Table -->
-                        <section>
-                            <table class="w-full text-left">
-                                <thead class="bg-gray-800 text-white">
-                                    <tr>
-                                        <th class="text-left text-xs font-semibold p-2 rounded-l-lg">Deskripsi</th>
-                                        <th class="text-right text-xs font-semibold p-2 rounded-r-lg">Harga</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-b border-gray-200">
-                                        <td class="p-3 align-top">
-                                            <p class="font-semibold text-gray-800 text-sm">Sewa Videobooth 360</p>
-                                            <p class="text-xs text-gray-500" id="package-preview">Nama Paket</p>
-                                        </td>
-                                        <td class="text-right p-3 align-top font-medium text-sm text-gray-700" id="package-price-preview">Rp 0</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </section>
+                            <!-- Items Table -->
+                            <section>
+                                <table class="w-full text-left">
+                                    <thead class="bg-gray-800 text-white">
+                                        <tr>
+                                            <th class="text-left text-xs font-semibold p-2 rounded-l-lg">Deskripsi</th>
+                                            <th class="text-right text-xs font-semibold p-2 rounded-r-lg">Harga</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-gray-200">
+                                            <td class="p-2 align-top">
+                                                <p class="font-semibold text-gray-800 text-sm">Sewa Videobooth 360</p>
+                                                <p class="text-xs text-gray-500" id="package-preview">Nama Paket</p>
+                                            </td>
+                                            <td class="text-right p-2 align-top font-medium text-sm text-gray-700" id="package-price-preview">Rp 0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
 
-                        <!-- Totals Section -->
-                        <section class="flex justify-end mt-6">
-                            <div class="w-full max-w-[220px] text-xs">
-                                <div class="space-y-2">
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-500">Subtotal</span>
-                                        <span class="font-medium text-gray-800" id="subtotal-preview">Rp 0</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-500" id="discount-label-preview">Diskon</span>
-                                        <span class="font-medium text-red-500" id="discount-amount-preview">- Rp 0</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-500">Ongkos Kirim</span>
-                                        <span class="font-medium text-gray-800" id="shipping-preview">Rp 0</span>
-                                    </div>
-                                    <div class="flex justify-between pt-2 border-t-2 border-gray-200">
-                                        <span class="font-bold text-gray-800">Total</span>
-                                        <span class="font-bold text-gray-800" id="total-preview">Rp 0</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-500">Uang Muka (DP)</span>
-                                        <span class="font-medium text-gray-800" id="dp-preview">Rp 0</span>
-                                    </div>
-                                    <div id="balance-due-container" class="flex justify-between p-2 bg-blue-100 text-blue-900 rounded-lg mt-2">
-                                        <span class="font-bold text-sm">Sisa Pembayaran</span>
-                                        <span class="font-bold text-sm" id="balance-preview">Rp 0</span>
+                            <!-- Totals Section -->
+                            <section class="flex justify-end mt-4">
+                                <div class="w-full max-w-[220px] text-xs">
+                                    <div class="space-y-1">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-500">Subtotal</span>
+                                            <span class="font-medium text-gray-800" id="subtotal-preview">Rp 0</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-500" id="discount-label-preview">Diskon</span>
+                                            <span class="font-medium text-red-500" id="discount-amount-preview">- Rp 0</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-500">Ongkos Kirim</span>
+                                            <span class="font-medium text-gray-800" id="shipping-preview">Rp 0</span>
+                                        </div>
+                                        <div class="flex justify-between pt-2 border-t-2 border-gray-200">
+                                            <span class="font-bold text-gray-800">Total</span>
+                                            <span class="font-bold text-gray-800" id="total-preview">Rp 0</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-500">Uang Muka (DP)</span>
+                                            <span class="font-medium text-gray-800" id="dp-preview">Rp 0</span>
+                                        </div>
+                                        <div id="balance-due-container" class="flex justify-between p-2 bg-blue-100 text-blue-900 rounded-lg mt-1">
+                                            <span class="font-bold text-sm">Sisa Pembayaran</span>
+                                            <span class="font-bold text-sm" id="balance-preview">Rp 0</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </section>
-
+                            </section>
+                        </main>
                         <!-- Footer Notes -->
-                        <footer class="border-t border-gray-200 mt-6 pt-4">
+                        <footer class="mt-auto pt-4">
                             <h4 class="text-xs font-semibold text-gray-500 mb-2 text-center uppercase tracking-wider">Detail Pembayaran</h4>
-                            <div class="bg-gray-50 border border-gray-100 p-3 rounded-lg text-center">
+                            <div class="bg-gray-50 border border-gray-100 p-2 rounded-lg text-center">
                                 <p class="text-xs font-medium text-gray-600">Bank Mandiri</p>
-                                <p class="text-base font-bold text-gray-800 tracking-wider my-1">1120018375498</p>
+                                <p class="text-sm font-bold text-gray-800 tracking-wider my-0.5">1120018375498</p>
                                 <p class="text-xs text-gray-500">(a/n SANTRI SYARIFATUL MA)</p>
                             </div>
-                            <p class="mt-4 text-[10px] text-gray-500 text-center">
+                            <p class="mt-3 text-[9px] text-gray-500 text-center">
                                 Pelunasan dilakukan paling lambat H-1 sebelum acara. Terima kasih atas kepercayaan Anda!
                             </p>
                         </footer>
@@ -501,8 +502,8 @@
                 const opt = {
                   margin:       0,
                   filename:     `Invoice_${invoiceNumber}_${clientName}.pdf`,
-                  image:        { type: 'jpeg', quality: 1.0 },
-                  html2canvas:  { scale: 3, useCORS: true, logging: false },
+                  image:        { type: 'jpeg', quality: 0.98 },
+                  html2canvas:  { scale: 2, useCORS: true, logging: false },
                   jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
                 return html2pdf().from(element).set(opt);
