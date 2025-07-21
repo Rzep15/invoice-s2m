@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" xintegrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -34,7 +35,7 @@
             .print-container {
                 width: 100% !important;
                 max-width: 100% !important;
-                padding: 1cm !important; /* Add some margin for printing */
+                padding: 0 !important;
                 margin: 0 !important;
             }
             #invoice-preview-container {
@@ -44,6 +45,7 @@
                 width: 100%;
                 height: 100%;
                 box-sizing: border-box;
+                padding: 20mm 15mm !important; /* Adjusted padding for better fit */
             }
         }
         /* Custom form styling */
@@ -206,12 +208,26 @@
                     
                     <div id="invoice-preview">
                         <!-- Invoice Header -->
-                        <header class="flex justify-between items-start pb-8 mb-8 border-b-2 border-gray-800">
+                        <header class="flex justify-between items-start pb-6 mb-6 border-b-2 border-gray-800">
                             <div>
                                 <img src="https://i.imgur.com/IJxCjEL.png" alt="Logo S2M PRODUCTION" class="w-28 mb-4" onerror="this.style.display='none'">
                                 <h2 class="text-xl font-bold text-gray-800">S2M PRODUCTION</h2>
                                 <p class="text-sm text-gray-500">Sewa Videobooth 360</p>
-                                <p class="text-sm text-gray-500">official.s2mproduction@gmail.com | 0812-1111-4522</p>
+                                <div class="mt-2 space-y-1 text-sm text-gray-500">
+                                    <div class="flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                                        </svg>
+                                        <span>official.s2mproduction@gmail.com</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                                        </svg>
+                                        <span>0812-1111-4522</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="text-right">
                                 <h1 class="text-4xl font-extrabold text-gray-800 uppercase">Invoice</h1>
@@ -220,7 +236,7 @@
                         </header>
 
                         <!-- Client & Date Info -->
-                        <section class="grid grid-cols-2 gap-8 my-10">
+                        <section class="grid grid-cols-2 gap-8 my-8">
                             <div>
                                 <h4 class="text-sm font-semibold text-gray-500 mb-2 uppercase tracking-wider">Ditagihkan Kepada</h4>
                                 <p id="client-name-preview" class="text-lg font-bold text-gray-800">Nama Klien</p>
@@ -234,7 +250,7 @@
                         </section>
                         
                         <!-- Event Details -->
-                        <section class="mb-10 bg-gray-50 p-4 rounded-lg">
+                        <section class="mb-8 bg-gray-50 p-4 rounded-lg">
                              <h4 class="text-sm font-semibold text-gray-500 mb-2 uppercase tracking-wider">Detail Acara</h4>
                              <p class="font-semibold text-gray-800" id="event-name-preview">Nama Acara</p>
                              <p class="text-sm text-gray-500" id="event-address-preview">Alamat Acara</p>
@@ -262,7 +278,7 @@
                         </section>
 
                         <!-- Totals Section -->
-                        <section class="flex justify-end mt-10">
+                        <section class="flex justify-end mt-8">
                             <div class="w-full max-w-xs text-sm">
                                 <div class="space-y-3">
                                     <div class="flex justify-between">
@@ -294,7 +310,7 @@
                         </section>
 
                         <!-- Footer Notes -->
-                        <footer class="border-t border-gray-200 mt-12 pt-8">
+                        <footer class="border-t border-gray-200 mt-8 pt-6">
                             <h4 class="text-sm font-semibold text-gray-500 mb-3 text-center uppercase tracking-wider">Detail Pembayaran</h4>
                             <div class="bg-gray-50 border border-gray-100 p-4 rounded-lg text-center">
                                 <p class="text-sm font-medium text-gray-600">Bank Mandiri</p>
@@ -478,27 +494,43 @@
             });
 
             document.getElementById('print-button').addEventListener('click', () => {
-                window.print();
+                 const element = document.getElementById('invoice-preview-container');
+                 const opt = {
+                  margin:       0,
+                  filename:     `Invoice_${previewFields.invoiceNumber.textContent}_${(document.getElementById('clientName').value || 'Klien').replace(/ /g, '_')}.pdf`,
+                  image:        { type: 'jpeg', quality: 0.98 },
+                  html2canvas:  { scale: 2, useCORS: true },
+                  jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                };
+                html2pdf().from(element).set(opt).save();
             });
             
             document.getElementById('whatsapp-button').addEventListener('click', () => {
                 const clientName = document.getElementById('clientName').value || 'Klien';
-                const eventName = document.getElementById('eventName').value || 'Acara Anda';
-                const total = previewFields.total.textContent;
-                const balance = previewFields.balance.textContent;
                 const invoiceNumber = previewFields.invoiceNumber.textContent;
-
-                let message = `Yth. ${clientName},\n\n`;
-                message += `Berikut adalah ringkasan tagihan untuk acara *${eventName}* (Invoice #${invoiceNumber}):\n\n`;
-                message += `Total Tagihan: *${total}*\n`;
-                message += `Sisa Pembayaran: *${balance}*\n\n`;
-                message += `Mohon untuk segera melakukan pelunasan. Terima kasih.\n\n`;
-                message += `- S2M PRODUCTION`;
-
-                const encodedMessage = encodeURIComponent(message);
-                const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+                const element = document.getElementById('invoice-preview-container');
                 
-                window.open(whatsappUrl, '_blank');
+                const opt = {
+                  margin:       0,
+                  filename:     `Invoice_${invoiceNumber}_${clientName.replace(/ /g, '_')}.pdf`,
+                  image:        { type: 'jpeg', quality: 0.98 },
+                  html2canvas:  { scale: 2, useCORS: true },
+                  jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                };
+
+                // Generate and download the PDF
+                html2pdf().from(element).set(opt).save().then(() => {
+                    // After PDF is saved, open WhatsApp
+                    let message = `Yth. ${clientName},\n\n`;
+                    message += `Berikut kami kirimkan invoice dalam format PDF (Invoice #${invoiceNumber}).\n\n`;
+                    message += `Mohon untuk melampirkan file PDF yang baru saja Anda unduh untuk melanjutkan.\n\n`;
+                    message += `Terima kasih.\n- S2M PRODUCTION`;
+
+                    const encodedMessage = encodeURIComponent(message);
+                    const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+                    
+                    window.open(whatsappUrl, '_blank');
+                });
             });
 
             // Initialize the invoice
