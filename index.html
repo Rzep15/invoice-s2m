@@ -42,9 +42,28 @@
             display: none; /* Hidden by default */
             z-index: 10;
         }
+        /* Loading Overlay */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            font-size: 1.5rem;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
+
+    <div id="loading-overlay" class="hidden">
+        <p>Membuat PDF...</p>
+    </div>
 
     <div class="container mx-auto p-4 sm:p-6 lg:p-8">
         <div class="flex flex-wrap -mx-4">
@@ -313,6 +332,7 @@
             const downPaymentInput = document.getElementById('downPayment');
             const paidStamp = document.getElementById('paid-stamp');
             const balanceContainer = document.getElementById('balance-due-container');
+            const loadingOverlay = document.getElementById('loading-overlay');
 
             const previewFields = {
                 clientName: document.getElementById('client-name-preview'),
@@ -457,21 +477,39 @@
             });
 
             function generatePdf() {
-                const element = document.getElementById('invoice-preview-container');
+                loadingOverlay.classList.remove('hidden');
+                
+                const originalElement = document.getElementById('invoice-preview-container');
                 const clientName = (document.getElementById('clientName').value || 'Klien').replace(/ /g, '_');
                 const invoiceNumber = previewFields.invoiceNumber.textContent;
+
+                // Clone the element to render it off-screen with a fixed width
+                const clonedElement = originalElement.cloneNode(true);
+                const printContainer = document.createElement('div');
+
+                // Style the container to be off-screen and have a fixed A4 width
+                Object.assign(printContainer.style, {
+                    position: 'absolute',
+                    left: '-9999px',
+                    width: '210mm',
+                    height: '297mm',
+                    overflow: 'hidden',
+                    backgroundColor: 'white'
+                });
+                
+                printContainer.appendChild(clonedElement);
+                document.body.appendChild(printContainer);
 
                 const opt = {
                     margin: 0,
                     filename: `Invoice_${invoiceNumber}_${clientName}.pdf`,
                     image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2, useCORS: true, allowTaint: true },
+                    html2canvas: { scale: 3, useCORS: true, allowTaint: true },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
-                // Create a new promise to ensure images are loaded
-                return new Promise((resolve) => {
-                    const images = element.getElementsByTagName('img');
+                const pdfPromise = new Promise((resolve) => {
+                    const images = clonedElement.getElementsByTagName('img');
                     let loadedImages = 0;
                     const totalImages = images.length;
 
@@ -479,29 +517,29 @@
                         resolve();
                     } else {
                         for (let i = 0; i < totalImages; i++) {
-                            // Use a separate Image object to ensure it's loaded from cache or network
                             const img = new Image();
-                            img.crossOrigin = 'Anonymous'; // Handle CORS for external images
+                            img.crossOrigin = 'Anonymous';
                             img.onload = () => {
                                 loadedImages++;
-                                if (loadedImages === totalImages) {
-                                    resolve();
-                                }
+                                if (loadedImages === totalImages) resolve();
                             };
                             img.onerror = () => {
                                 loadedImages++;
-                                console.error("Could not load image:", images[i].src);
-                                if (loadedImages === totalImages) {
-                                    resolve(); // Still resolve even if an image fails
-                                }
+                                if (loadedImages === totalImages) resolve();
                             };
                             img.src = images[i].src;
                         }
                     }
                 }).then(() => {
-                    // All images are loaded, now generate the PDF
-                    return html2pdf().from(element).set(opt).save();
+                    return html2pdf().from(clonedElement).set(opt).save();
                 });
+                
+                pdfPromise.finally(() => {
+                    document.body.removeChild(printContainer);
+                    loadingOverlay.classList.add('hidden');
+                });
+
+                return pdfPromise;
             }
 
             document.getElementById('print-button').addEventListener('click', () => {
@@ -523,7 +561,7 @@
                         const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
                         
                         window.open(whatsappUrl, '_blank');
-                    }, 1000); // Increased delay to ensure file is saved
+                    }, 1000);
                 });
             });
 
