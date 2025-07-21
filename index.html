@@ -56,6 +56,22 @@
         .section-title {
             @apply text-lg font-semibold text-slate-800;
         }
+        /* Paid Stamp Style */
+        .paid-stamp {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-20deg);
+            font-size: 6rem;
+            font-weight: 700;
+            color: #28a745;
+            border: 8px double #28a745;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            opacity: 0.15;
+            pointer-events: none;
+            display: none; /* Hidden by default */
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800">
@@ -112,26 +128,28 @@
                         <!-- Event Details -->
                         <div class="space-y-4 border-t border-slate-200 pt-6">
                             <h3 class="section-title">Detail Acara</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                                <div>
-                                    <label for="eventName" class="form-label">Nama Acara</label>
-                                     <div class="relative">
-                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5a.997.997 0 01.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                                    <div>
+                                        <label for="eventName" class="form-label">Nama Acara</label>
+                                         <div class="relative">
+                                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5a.997.997 0 01.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
+                                            </div>
+                                            <input type="text" id="eventName" placeholder="Wedding Budi & Wati" class="form-input pl-10">
                                         </div>
-                                        <input type="text" id="eventName" placeholder="Wedding Budi & Wati" class="form-input pl-10">
+                                    </div>
+                                    <div>
+                                        <label for="eventDate" class="form-label">Tanggal Acara</label>
+                                        <div class="relative">
+                                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                                            </div>
+                                            <input type="date" id="eventDate" class="form-input pl-10">
+                                        </div>
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="eventDate" class="form-label">Tanggal Acara</label>
-                                    <div class="relative">
-                                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
-                                        </div>
-                                        <input type="date" id="eventDate" class="form-input pl-10">
-                                    </div>
-                                </div>
-                                <div class="md:col-span-2">
                                     <label for="eventAddress" class="form-label">Alamat Acara</label>
                                     <textarea id="eventAddress" rows="2" placeholder="Jl. Merdeka No. 1, Jakarta" class="form-input"></textarea>
                                 </div>
@@ -140,7 +158,7 @@
                         
                         <!-- Order Details -->
                         <div class="space-y-4 border-t border-slate-200 pt-6">
-                            <h3 class="section-title">Detail Pesanan</h3>
+                            <h3 class="section-title">Detail Pesanan & Pembayaran</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                                 <div>
                                     <label for="package" class="form-label">Pilih Paket</label>
@@ -172,7 +190,14 @@
                                         <input type="number" id="shippingCost" placeholder="0" class="form-input pl-9">
                                     </div>
                                 </div>
-                                <div class="md:col-span-2">
+                                <div>
+                                    <label for="paymentStatus" class="form-label">Status Pembayaran</label>
+                                    <select id="paymentStatus" class="form-input">
+                                        <option value="Belum Lunas">Belum Lunas</option>
+                                        <option value="Lunas">Lunas</option>
+                                    </select>
+                                </div>
+                                <div>
                                     <label for="downPayment" class="form-label">Uang Muka / DP</label>
                                      <div class="relative">
                                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><span class="text-slate-500 text-sm">Rp</span></div>
@@ -197,7 +222,10 @@
 
             <!-- Invoice Preview Column -->
             <div class="w-full lg:w-7/12 px-4 print-container">
-                <div id="invoice-preview-container" class="bg-white p-8 sm:p-10 lg:p-12 rounded-2xl shadow-xl shadow-slate-200/50">
+                <div id="invoice-preview-container" class="relative bg-white p-8 sm:p-10 lg:p-12 rounded-2xl shadow-xl shadow-slate-200/50">
+                    <!-- Paid Stamp -->
+                    <div id="paid-stamp" class="paid-stamp">LUNAS</div>
+                    
                     <div id="invoice-preview">
                         <!-- Invoice Header -->
                         <header class="flex justify-between items-start pb-8 border-b border-slate-200">
@@ -278,7 +306,7 @@
                                         <span class="text-slate-500">Uang Muka (DP)</span>
                                         <span class="font-medium text-slate-700" id="dp-preview">Rp 0</span>
                                     </div>
-                                    <div class="flex justify-between p-3 bg-indigo-50 rounded-lg mt-2">
+                                    <div id="balance-due-container" class="flex justify-between p-3 bg-indigo-50 rounded-lg mt-2">
                                         <span class="font-bold text-base text-indigo-800">Sisa Pembayaran</span>
                                         <span class="font-bold text-base text-indigo-800" id="balance-preview">Rp 0</span>
                                     </div>
@@ -317,6 +345,10 @@
             const packageSelect = document.getElementById('package');
             const packagePriceInput = document.getElementById('packagePrice');
             const manualInvoiceInput = document.getElementById('invoiceNumberManual');
+            const paymentStatusSelect = document.getElementById('paymentStatus');
+            const downPaymentInput = document.getElementById('downPayment');
+            const paidStamp = document.getElementById('paid-stamp');
+            const balanceContainer = document.getElementById('balance-due-container');
 
             const previewFields = {
                 clientName: document.getElementById('client-name-preview'),
@@ -374,9 +406,24 @@
                 const discountPercent = parseFloat(document.getElementById('discount').value) || 0;
                 const discountAmount = (packagePrice * discountPercent) / 100;
                 const shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
-                const downPayment = parseFloat(document.getElementById('downPayment').value) || 0;
+                let downPayment = parseFloat(downPaymentInput.value) || 0;
                 
                 const total = packagePrice - discountAmount + shippingCost;
+                
+                // Handle payment status
+                const paymentStatus = paymentStatusSelect.value;
+                if (paymentStatus === 'Lunas') {
+                    downPayment = total; // If paid, DP equals total
+                    downPaymentInput.value = total; // Update the input field
+                    paidStamp.style.display = 'block';
+                    balanceContainer.classList.remove('bg-indigo-50', 'text-indigo-800');
+                    balanceContainer.classList.add('bg-green-100', 'text-green-800');
+                } else {
+                    paidStamp.style.display = 'none';
+                    balanceContainer.classList.remove('bg-green-100', 'text-green-800');
+                    balanceContainer.classList.add('bg-indigo-50', 'text-indigo-800');
+                }
+                
                 const balance = total - downPayment;
 
                 previewFields.packagePrice.textContent = formatCurrency(packagePrice);
@@ -400,50 +447,56 @@
                 const selectedPackage = packageSelect.value;
                 const price = packagePrices[selectedPackage] !== undefined ? packagePrices[selectedPackage] : 0;
                 packagePriceInput.value = price;
-                // Trigger 'input' event to update the preview
                 packagePriceInput.dispatchEvent(new Event('input'));
+            }
+            
+            // Function to handle payment status change
+            function handlePaymentStatusChange() {
+                const paymentStatus = paymentStatusSelect.value;
+                if (paymentStatus === 'Lunas') {
+                    // Disable DP input if paid
+                    downPaymentInput.readOnly = true;
+                } else {
+                    downPaymentInput.readOnly = false;
+                }
+                updatePreview();
             }
 
             // Function to initialize the invoice on page load
             function initializeInvoice() {
-                // Set a unique invoice number
                 autoInvoiceNumber = `INV-${Date.now().toString().slice(-6)}`;
-                manualInvoiceInput.value = ''; // Clear manual input
+                manualInvoiceInput.value = '';
                 
-                // Set today's date for invoice and event date
                 const today = new Date();
-                const todayString = today.toISOString().split('T')[0]; // YYYY-MM-DD
+                const todayString = today.toISOString().split('T')[0];
                 document.getElementById('eventDate').value = todayString;
                 previewFields.invoiceDate.textContent = formatDate(todayString);
                 
-                // Set default package and its price
                 packageSelect.value = "Gold (5 Jam)";
-                handlePackageChange();
+                paymentStatusSelect.value = "Belum Lunas";
+                downPaymentInput.readOnly = false;
                 
-                // Run initial preview update
+                handlePackageChange();
                 updatePreview();
             }
 
-            // Add event listeners to all inputs
+            // Add event listeners
             inputs.forEach(input => {
                 input.addEventListener('input', updatePreview);
             });
             
-            // Add specific event listener for package selection
             packageSelect.addEventListener('change', handlePackageChange);
+            paymentStatusSelect.addEventListener('change', handlePaymentStatusChange);
 
-            // Event listener for the reset button
             form.addEventListener('reset', () => {
-                // Allow a brief moment for the form to reset before re-initializing
                 setTimeout(initializeInvoice, 50);
             });
 
-            // Event listener for the print button
             document.getElementById('print-button').addEventListener('click', () => {
                 window.print();
             });
 
-            // Initialize the invoice when the page loads
+            // Initialize the invoice
             initializeInvoice();
         });
     </script>
