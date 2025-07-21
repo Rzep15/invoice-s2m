@@ -484,69 +484,51 @@
             });
 
             function generatePdf() {
-                const originalElement = document.getElementById('invoice-preview-container');
+                const element = document.getElementById('invoice-preview-container');
                 const clientName = (document.getElementById('clientName').value || 'Klien').replace(/ /g, '_');
                 const invoiceNumber = previewFields.invoiceNumber.textContent;
 
-                // Clone the element to render it off-screen with a fixed width
-                const clonedElement = originalElement.cloneNode(true);
-                const printContainer = document.createElement('div');
-
-                // Style the container to be off-screen and have a fixed A4 width
-                Object.assign(printContainer.style, {
-                    position: 'absolute',
-                    left: '-9999px',
-                    width: '210mm', // A4 width
-                    height: '297mm', // A4 height
-                    overflow: 'hidden',
-                    backgroundColor: 'white'
-                });
-                
-                printContainer.appendChild(clonedElement);
-                document.body.appendChild(printContainer);
-
                 const opt = {
-                  margin:       0,
-                  filename:     `Invoice_${invoiceNumber}_${clientName}.pdf`,
-                  image:        { type: 'jpeg', quality: 0.98 },
-                  html2canvas:  { scale: 2, useCORS: true, logging: false, onrendered: function(canvas) {
-                      // Ensure all images are loaded before rendering
-                      const images = clonedElement.getElementsByTagName('img');
-                      let loadedImages = 0;
-                      if (images.length === 0) {
-                          return Promise.resolve();
-                      }
-                      return new Promise((resolve) => {
-                          for (let i = 0; i < images.length; i++) {
-                              if (images[i].complete) {
-                                  loadedImages++;
-                                  if (loadedImages === images.length) {
-                                      resolve();
-                                  }
-                              } else {
-                                  images[i].onload = () => {
-                                      loadedImages++;
-                                      if (loadedImages === images.length) {
-                                          resolve();
-                                      }
-                                  };
-                              }
-                          }
-                      });
-                  }},
-                  jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    margin: 0,
+                    filename: `Invoice_${invoiceNumber}_${clientName}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, allowTaint: true },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
-                const pdfPromise = html2pdf().from(clonedElement).set(opt).save();
-                
-                pdfPromise.then(() => {
-                    document.body.removeChild(printContainer);
-                }).catch((error) => {
-                    console.error("PDF generation failed:", error);
-                    document.body.removeChild(printContainer);
-                });
+                // Create a new promise to ensure images are loaded
+                return new Promise((resolve) => {
+                    const images = element.getElementsByTagName('img');
+                    let loadedImages = 0;
+                    const totalImages = images.length;
 
-                return pdfPromise;
+                    if (totalImages === 0) {
+                        resolve();
+                    } else {
+                        for (let i = 0; i < totalImages; i++) {
+                            // Use a separate Image object to ensure it's loaded from cache or network
+                            const img = new Image();
+                            img.crossOrigin = 'Anonymous'; // Handle CORS for external images
+                            img.onload = () => {
+                                loadedImages++;
+                                if (loadedImages === totalImages) {
+                                    resolve();
+                                }
+                            };
+                            img.onerror = () => {
+                                loadedImages++;
+                                console.error("Could not load image:", images[i].src);
+                                if (loadedImages === totalImages) {
+                                    resolve(); // Still resolve even if an image fails
+                                }
+                            };
+                            img.src = images[i].src;
+                        }
+                    }
+                }).then(() => {
+                    // All images are loaded, now generate the PDF
+                    return html2pdf().from(element).set(opt).save();
+                });
             }
 
             document.getElementById('print-button').addEventListener('click', () => {
