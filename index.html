@@ -42,28 +42,9 @@
             display: none; /* Hidden by default */
             z-index: 10;
         }
-        /* Loading Overlay */
-        #loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            color: white;
-            font-size: 1.5rem;
-        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
-
-    <div id="loading-overlay" class="hidden">
-        <p>Membuat PDF...</p>
-    </div>
 
     <div class="container mx-auto p-4 sm:p-6 lg:p-8">
         <div class="flex flex-wrap -mx-4">
@@ -476,7 +457,7 @@
                 setTimeout(initializeInvoice, 50);
             });
 
-            function generatePdf() {
+            async function generatePdf() {
                 loadingOverlay.classList.remove('hidden');
                 
                 const originalElement = document.getElementById('invoice-preview-container');
@@ -500,69 +481,57 @@
                 printContainer.appendChild(clonedElement);
                 document.body.appendChild(printContainer);
 
-                const opt = {
-                    margin: 0,
-                    filename: `Invoice_${invoiceNumber}_${clientName}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 3, useCORS: true, allowTaint: true },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-
-                const pdfPromise = new Promise((resolve) => {
+                try {
                     const images = clonedElement.getElementsByTagName('img');
-                    let loadedImages = 0;
-                    const totalImages = images.length;
-
-                    if (totalImages === 0) {
-                        resolve();
-                    } else {
-                        for (let i = 0; i < totalImages; i++) {
-                            const img = new Image();
-                            img.crossOrigin = 'Anonymous';
-                            img.onload = () => {
-                                loadedImages++;
-                                if (loadedImages === totalImages) resolve();
-                            };
-                            img.onerror = () => {
-                                loadedImages++;
-                                if (loadedImages === totalImages) resolve();
-                            };
-                            img.src = images[i].src;
+                    const imagePromises = [];
+                    for (let i = 0; i < images.length; i++) {
+                        if (!images[i].complete) {
+                            imagePromises.push(new Promise((resolve) => {
+                                images[i].onload = resolve;
+                                images[i].onerror = resolve; // Resolve even on error
+                            }));
                         }
                     }
-                }).then(() => {
-                    return html2pdf().from(clonedElement).set(opt).save();
-                });
-                
-                pdfPromise.finally(() => {
+                    await Promise.all(imagePromises);
+
+                    const opt = {
+                        margin: 0,
+                        filename: `Invoice_${invoiceNumber}_${clientName}.pdf`,
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 3, useCORS: true },
+                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    };
+
+                    await html2pdf().from(clonedElement).set(opt).save();
+                } catch (error) {
+                    console.error("PDF generation failed:", error);
+                } finally {
                     document.body.removeChild(printContainer);
                     loadingOverlay.classList.add('hidden');
-                });
-
-                return pdfPromise;
+                }
             }
 
             document.getElementById('print-button').addEventListener('click', () => {
                 generatePdf();
             });
             
-            document.getElementById('whatsapp-button').addEventListener('click', () => {
+            document.getElementById('whatsapp-button').addEventListener('click', async () => {
                 const clientName = document.getElementById('clientName').value || 'Klien';
                 const invoiceNumber = previewFields.invoiceNumber.textContent;
                 
-                generatePdf().then(() => {
-                    setTimeout(() => {
-                        let message = `Yth. ${clientName},\n\n`;
-                        message += `Berikut kami kirimkan invoice dalam format PDF (Invoice #${invoiceNumber}).\n\n`;
-                        message += `Silakan lampirkan file PDF yang baru saja Anda unduh.\n\n`;
-                        message += `Terima kasih.\n- S2M PRODUCTION`;
+                await generatePdf();
+                
+                setTimeout(() => {
+                    let message = `Yth. ${clientName},\n\n`;
+                    message += `Berikut kami kirimkan invoice dalam format PDF (Invoice #${invoiceNumber}).\n\n`;
+                    message += `Silakan lampirkan file PDF yang baru saja Anda unduh.\n\n`;
+                    message += `Terima kasih.\n- S2M PRODUCTION`;
 
-                        const encodedMessage = encodeURIComponent(message);
-                        const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
-                        
-                        window.open(whatsappUrl, '_blank');
-                    }, 1000);
-                });
+                    const encodedMessage = encodeURIComponent(message);
+                    const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+                    
+                    window.open(whatsappUrl, '_blank');
+                }, 1000);
             });
 
             // Initialize the invoice
