@@ -65,9 +65,15 @@
                         <!-- General Info -->
                         <div>
                              <h3 class="section-title">Info Umum</h3>
-                             <div>
-                                <label for="invoiceNumberManual" class="form-label">Nomor Invoice (Opsional)</label>
-                                <input type="text" id="invoiceNumberManual" placeholder="Otomatis jika kosong" class="form-input">
+                             <div class="space-y-4">
+                                <div>
+                                    <label for="invoiceNumberManual" class="form-label">Nomor Invoice (Opsional)</label>
+                                    <input type="text" id="invoiceNumberManual" placeholder="Otomatis jika kosong" class="form-input">
+                                </div>
+                                <div>
+                                    <label for="invoiceDateInput" class="form-label">Tanggal Invoice</label>
+                                    <input type="date" id="invoiceDateInput" class="form-input">
+                                </div>
                             </div>
                         </div>
 
@@ -361,6 +367,7 @@
                 previewFields.package.textContent = packageSelect.value;
                 
                 // Update date
+                previewFields.invoiceDate.textContent = formatDate(document.getElementById('invoiceDateInput').value);
                 previewFields.eventDate.textContent = formatDate(document.getElementById('eventDate').value);
 
                 // Calculate and update prices
@@ -432,7 +439,7 @@
                 const today = new Date();
                 const todayString = today.toISOString().split('T')[0];
                 document.getElementById('eventDate').value = todayString;
-                previewFields.invoiceDate.textContent = formatDate(todayString);
+                document.getElementById('invoiceDateInput').value = todayString;
                 
                 packageSelect.value = "Gold (5 Jam)";
                 paymentStatusSelect.value = "Belum Lunas";
