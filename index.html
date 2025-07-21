@@ -14,25 +14,36 @@
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
+        /* A4 Page Sizing for Print */
+        @page {
+            size: A4;
+            margin: 0;
+        }
         /* Styles for printing */
         @media print {
+            html, body {
+                width: 210mm;
+                height: 297mm;
+                background-color: white !important;
+                margin: 0;
+                padding: 0;
+            }
             .no-print {
                 display: none !important;
             }
             .print-container {
                 width: 100% !important;
-                flex: 0 0 100% !important;
                 max-width: 100% !important;
                 padding: 0 !important;
                 margin: 0 !important;
-            }
-            body {
-                background-color: white !important;
             }
             #invoice-preview-container {
                 box-shadow: none !important;
                 border: none !important;
                 border-radius: 0 !important;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
             }
         }
         /* Custom form styling */
@@ -134,7 +145,6 @@
                                 <div>
                                     <label for="package" class="form-label">Pilih Paket</label>
                                     <select id="package" class="form-input">
-                                        <option value="Bronze (1 Jam)">Bronze (1 Jam)</option>
                                         <option value="Silver (3 Jam)">Silver (3 Jam)</option>
                                         <option value="Gold (5 Jam)">Gold (5 Jam)</option>
                                         <option value="Diamond (7 Jam)">Diamond (7 Jam)</option>
@@ -149,10 +159,10 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="discount" class="form-label">Diskon</label>
+                                    <label for="discount" class="form-label">Diskon (%)</label>
                                      <div class="relative">
-                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><span class="text-slate-500 text-sm">Rp</span></div>
-                                        <input type="number" id="discount" placeholder="0" class="form-input pl-9">
+                                        <input type="number" id="discount" placeholder="0" class="form-input pr-8 text-right">
+                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"><span class="text-slate-500 text-sm">%</span></div>
                                     </div>
                                 </div>
                                 <div>
@@ -194,7 +204,7 @@
                             <div>
                                 <img src="https://i.imgur.com/IJxCjEL.png" alt="Logo S2M PRODUCTION" class="w-24 mb-4" onerror="this.style.display='none'">
                                 <h2 class="text-2xl font-bold text-slate-900">S2M PRODUCTION</h2>
-                                <p class="text-sm text-slate-500">Spesialis Videobooth 360</p>
+                                <p class="text-sm text-slate-500">Sewa Videobooth 360</p>
                                 <p class="text-sm text-slate-500">official.s2mproduction@gmail.com | 0812-1111-4522</p>
                             </div>
                             <div class="text-right">
@@ -253,8 +263,8 @@
                                         <span class="font-medium text-slate-700" id="subtotal-preview">Rp 0</span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span class="text-slate-500">Diskon</span>
-                                        <span class="font-medium text-red-500" id="discount-preview">- Rp 0</span>
+                                        <span class="text-slate-500" id="discount-label-preview">Diskon</span>
+                                        <span class="font-medium text-red-500" id="discount-amount-preview">- Rp 0</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-slate-500">Ongkos Kirim</span>
@@ -278,9 +288,8 @@
 
                         <!-- Footer Notes -->
                         <footer class="border-t border-slate-200 mt-12 pt-8 text-sm text-slate-500">
-                            <h4 class="font-semibold text-slate-600 mb-2">Informasi Pembayaran:</h4>
-                            <p><strong>Bank BCA:</strong> 1234567890 a/n S2M PRODUCTION</p>
-                            <p><strong>Dana/OVO:</strong> 0812-1111-4522</p>
+                            <h4 class="font-semibold text-slate-600 mb-2 uppercase">Pembayaran</h4>
+                            <p><strong>Bank Mandiri:</strong> 1120018375498 a/n SANTRI SYARIFATUL MA</p>
                             <p class="mt-4"><strong>Catatan:</strong> Pelunasan pembayaran dilakukan paling lambat H-1 sebelum acara. Terima kasih atas kepercayaan Anda!</p>
                         </footer>
                     </div>
@@ -296,7 +305,6 @@
 
             // Package prices definition
             const packagePrices = {
-                "Bronze (1 Jam)": 1000000,
                 "Silver (3 Jam)": 1200000,
                 "Gold (5 Jam)": 1500000,
                 "Diamond (7 Jam)": 2000000,
@@ -319,7 +327,8 @@
                 package: document.getElementById('package-preview'),
                 packagePrice: document.getElementById('package-price-preview'),
                 subtotal: document.getElementById('subtotal-preview'),
-                discount: document.getElementById('discount-preview'),
+                discountLabel: document.getElementById('discount-label-preview'),
+                discountAmount: document.getElementById('discount-amount-preview'),
                 shipping: document.getElementById('shipping-preview'),
                 total: document.getElementById('total-preview'),
                 downPayment: document.getElementById('dp-preview'),
@@ -362,16 +371,24 @@
 
                 // Calculate and update prices
                 const packagePrice = parseFloat(packagePriceInput.value) || 0;
-                const discount = parseFloat(document.getElementById('discount').value) || 0;
+                const discountPercent = parseFloat(document.getElementById('discount').value) || 0;
+                const discountAmount = (packagePrice * discountPercent) / 100;
                 const shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
                 const downPayment = parseFloat(document.getElementById('downPayment').value) || 0;
                 
-                const total = packagePrice - discount + shippingCost;
+                const total = packagePrice - discountAmount + shippingCost;
                 const balance = total - downPayment;
 
                 previewFields.packagePrice.textContent = formatCurrency(packagePrice);
                 previewFields.subtotal.textContent = formatCurrency(packagePrice);
-                previewFields.discount.textContent = `- ${formatCurrency(discount)}`;
+
+                if (discountPercent > 0) {
+                    previewFields.discountLabel.textContent = `Diskon (${discountPercent}%)`;
+                } else {
+                    previewFields.discountLabel.textContent = 'Diskon';
+                }
+                previewFields.discountAmount.textContent = `- ${formatCurrency(discountAmount)}`;
+
                 previewFields.shipping.textContent = formatCurrency(shippingCost);
                 previewFields.total.textContent = formatCurrency(total);
                 previewFields.downPayment.textContent = formatCurrency(downPayment);
