@@ -509,7 +509,31 @@
                   margin:       0,
                   filename:     `Invoice_${invoiceNumber}_${clientName}.pdf`,
                   image:        { type: 'jpeg', quality: 0.98 },
-                  html2canvas:  { scale: 2, useCORS: true, logging: false },
+                  html2canvas:  { scale: 2, useCORS: true, logging: false, onrendered: function(canvas) {
+                      // Ensure all images are loaded before rendering
+                      const images = clonedElement.getElementsByTagName('img');
+                      let loadedImages = 0;
+                      if (images.length === 0) {
+                          return Promise.resolve();
+                      }
+                      return new Promise((resolve) => {
+                          for (let i = 0; i < images.length; i++) {
+                              if (images[i].complete) {
+                                  loadedImages++;
+                                  if (loadedImages === images.length) {
+                                      resolve();
+                                  }
+                              } else {
+                                  images[i].onload = () => {
+                                      loadedImages++;
+                                      if (loadedImages === images.length) {
+                                          resolve();
+                                      }
+                                  };
+                              }
+                          }
+                      });
+                  }},
                   jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
