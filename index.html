@@ -313,7 +313,6 @@
             const downPaymentInput = document.getElementById('downPayment');
             const paidStamp = document.getElementById('paid-stamp');
             const balanceContainer = document.getElementById('balance-due-container');
-            const loadingOverlay = document.getElementById('loading-overlay');
 
             const previewFields = {
                 clientName: document.getElementById('client-name-preview'),
@@ -458,8 +457,6 @@
             });
 
             async function generatePdf() {
-                loadingOverlay.classList.remove('hidden');
-                
                 const originalElement = document.getElementById('invoice-preview-container');
                 const clientName = (document.getElementById('clientName').value || 'Klien').replace(/ /g, '_');
                 const invoiceNumber = previewFields.invoiceNumber.textContent;
@@ -507,7 +504,6 @@
                     console.error("PDF generation failed:", error);
                 } finally {
                     document.body.removeChild(printContainer);
-                    loadingOverlay.classList.add('hidden');
                 }
             }
 
